@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Models\BankCoin;
 use App\Models\Drink;
 use App\Models\VmSetting;
@@ -97,8 +96,6 @@ class VmService
                 }
 
                 $deposit = $deposit - $bankCoin->name;
-
-                print "{$deposit}/{$bankCoin->name}</br>";
 
                 $this->moveCoinToWallet($bankCoin);
             }
