@@ -179,6 +179,8 @@ class VmService
         $drinkSeeder->run();
         $vmSettingSeeder->run();
 
+        $this->updateCashTotals();
+
         return true;
     }
 
