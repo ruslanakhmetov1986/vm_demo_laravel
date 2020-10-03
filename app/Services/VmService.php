@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class VmService
 {
-    public function index(){
+    public function index() : array
+    {
 
         $this->updateCashTotals();
 
@@ -20,22 +21,23 @@ class VmService
         $data['wallet'] = WalletCoin::all();
         $data['deposit'] = $this->getSettingByKey('deposit');
         $data['userWalletTotal'] = $this->getSettingByKey('user_wallet_total');
-        $data['vmBankTotal'] =  $this->getSettingByKey('vm_bank_total');
+        $data['vmBankTotal'] = $this->getSettingByKey('vm_bank_total');
 
         return $data;
     }
 
-    public function moveCoinToWallet($coin){
+    public function moveCoinToWallet(array $coin): bool
+    {
 
-        $bankCoin = BankCoin::find( $coin['name'] );
+        $bankCoin = BankCoin::find($coin['name']);
 
         if ($bankCoin->amount > 0) {
 
             $bankCoin->amount = $bankCoin->amount - 1;
             $bankCoin->save();
 
-            $walletCoin = WalletCoin::find( $bankCoin->name );
-            $walletCoin->amount = intval( $walletCoin->amount ) + 1;
+            $walletCoin = WalletCoin::find($bankCoin->name);
+            $walletCoin->amount = intval($walletCoin->amount) + 1;
             $walletCoin->save();
 
             $this->depositPut($bankCoin->name);
@@ -44,17 +46,18 @@ class VmService
         return true;
     }
 
-    public function moveCoinToVM($coin){
+    public function moveCoinToVM(array $coin): bool
+    {
 
-        $walletCoin = WalletCoin::find( $coin['name'] );
+        $walletCoin = WalletCoin::find($coin['name']);
 
         if ($walletCoin->amount > 0) {
 
             $walletCoin->amount = $walletCoin->amount - 1;
             $walletCoin->save();
 
-            $bankCoin = BankCoin::find( $walletCoin->name );
-            $bankCoin->amount = intval( $bankCoin->amount ) + 1;
+            $bankCoin = BankCoin::find($walletCoin->name);
+            $bankCoin->amount = intval($bankCoin->amount) + 1;
             $bankCoin->save();
 
             $this->depositPut($walletCoin->name);
@@ -63,7 +66,8 @@ class VmService
         return true;
     }
 
-    public function buy($drink){
+    public function buy(array $drink): bool
+    {
 
         $drink = Drink::find($drink['id']);
 
@@ -78,12 +82,13 @@ class VmService
     }
 
 
-    public function getChange(){
+    public function getChange(): bool
+    {
 
-        $bankCoins = BankCoin::orderBy('name','desc')->get();
+        $bankCoins = BankCoin::orderBy('name', 'desc')->get();
         $deposit = $this->depositGet();
 
-        if($deposit <= 0){
+        if ($deposit <= 0) {
             return false;
         }
 
@@ -91,7 +96,7 @@ class VmService
 
             for ($i = 0; $i <= $bankCoin->amount; $i++) {
 
-                if($deposit < $bankCoin->name){
+                if ($deposit < $bankCoin->name) {
                     continue;
                 }
 
@@ -106,62 +111,75 @@ class VmService
         return true;
     }
 
-    public function depositPut($amount){
+    public function depositPut(int $amount): int
+    {
         $oldDeposit = $this->getSettingByKey('deposit');
-        $newDeposit = $oldDeposit + $amount ;
+        $newDeposit = $oldDeposit + $amount;
         $this->setSettingByKey('deposit', $newDeposit);
         $this->updateCashTotals();
         return $newDeposit;
     }
 
-    public function depositCut($amount){
+    public function depositCut(int $amount): int
+    {
         $oldDeposit = $this->getSettingByKey('deposit');
-        $newDeposit = $oldDeposit - $amount ;
+        $newDeposit = $oldDeposit - $amount;
         $this->setSettingByKey('deposit', $newDeposit);
         $this->updateCashTotals();
         return $newDeposit;
     }
 
-    public function depositGet(){
+    public function depositGet(): int
+    {
         return $this->getSettingByKey('deposit');
     }
 
-    public function depositSet($amount){
+    public function depositSet($amount) : int
+    {
         $this->setSettingByKey('deposit', $amount);
     }
 
-    public function calculateTotal($items){
+    public function calculateTotal(array $items) : int
+    {
 
         $total = 0;
 
         foreach ($items as $item) {
-            $total += intval ($item->name ) * intval( $item->amount );
+            $total += intval($item->name) * intval($item->amount);
         }
 
         return $total;
     }
 
-    private function updateCashTotals(){
+    private function updateCashTotals() : bool
+    {
         $this->setSettingByKey('user_wallet_total', $this->calculateTotal(WalletCoin::all()));
-        $this->setSettingByKey('vm_bank_total',  $this->calculateTotal(BankCoin::all()));
+        $this->setSettingByKey('vm_bank_total', $this->calculateTotal(BankCoin::all()));
+
+        return true;
     }
 
 
-    public function getSettingByKey($key){
+    public function getSettingByKey(string $key) : string
+    {
         return VmSetting::find($key)->val;
     }
 
-    public function setSettingByKey($key, $val){
+    public function setSettingByKey(string $key, string $val)  : bool
+    {
         VmSetting::updateOrCreate(
-            ['key' =>  $key],
+            ['key' => $key],
             ['val' => $val]
         );
+
+        return true;
     }
 
-    public function resetDemoData(){
+    public function resetDemoData() : bool
+    {
 
         //clear tables
-        DB::transaction(function() {
+        DB::transaction(function () {
             VmSetting::query()->truncate();
             Drink::query()->truncate();
             BankCoin::query()->truncate();
