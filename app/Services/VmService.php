@@ -7,6 +7,10 @@ use App\Models\BankCoin;
 use App\Models\Drink;
 use App\Models\VmSetting;
 use App\Models\WalletCoin;
+use Database\Seeders\BankCoinSeeder;
+use Database\Seeders\DrinkSeeder;
+use Database\Seeders\VmSettingSeeder;
+use Database\Seeders\WalletCoinSeeder;
 use Illuminate\Support\Facades\DB;
 
 class VmService
@@ -239,10 +243,10 @@ class VmService
         });
 
         //insert data to tables
-        $bankCoinSeeder = new \Database\Seeders\WalletCoinSeeder();
-        $walletCoinSeeder = new \Database\Seeders\BankCoinSeeder();
-        $drinkSeeder = new \Database\Seeders\DrinkSeeder();
-        $vmSettingSeeder = new \Database\Seeders\VmSettingSeeder();
+        $bankCoinSeeder = new WalletCoinSeeder();
+        $walletCoinSeeder = new BankCoinSeeder();
+        $drinkSeeder = new DrinkSeeder();
+        $vmSettingSeeder = new VmSettingSeeder();
 
         $bankCoinSeeder->run();
         $walletCoinSeeder->run();
