@@ -180,7 +180,7 @@ class VmService
      * @param array $items
      * @return int
      */
-    public function calculateTotal(array $items) : int
+    public function calculateTotal(object $items) : int
     {
 
         $total = 0;
