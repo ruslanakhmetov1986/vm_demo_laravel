@@ -243,7 +243,9 @@
                     .catch(error => {
                         console.log(error);
                     })
-                    .finally(() => (this.is_loading = false));
+                    .finally(() => (
+                        this.is_loading = false
+                    ));
             },
 
             alert: function (msg) {
