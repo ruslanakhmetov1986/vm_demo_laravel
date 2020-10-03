@@ -20,11 +20,11 @@ class ApiController extends Controller
     }
 
     /**
+     * @return JsonResponse
      * @api {get}
      * @apiDescription gen index data
-     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json([
             'success' => true,
@@ -33,12 +33,12 @@ class ApiController extends Controller
     }
 
     /**
-     * @api {post}
-     * @apiDescription pay drink
      * @param Request $request
      * @return JsonResponse
+     * @api {post}
+     * @apiDescription pay drink
      */
-    public function pay(Request $request)
+    public function pay(Request $request): JsonResponse
     {
 
         $result = $this->vmService->moveCoinToVM($request->all());
@@ -51,12 +51,13 @@ class ApiController extends Controller
     }
 
     /**
-     * @api {post}
-     * @apiDescription buy drink
      * @param Request $request
      * @return JsonResponse
+     * @api {post}
+     * @apiDescription buy drink
      */
-    public function buy(Request $request){
+    public function buy(Request $request): JsonResponse
+    {
 
         $result = $this->vmService->buy($request->all());
 
@@ -67,11 +68,12 @@ class ApiController extends Controller
     }
 
     /**
+     * @return JsonResponse
      * @api {get}
      * @apiDescription get change from VM
-     * @return JsonResponse
      */
-    public function getChange(){
+    public function getChange(): JsonResponse
+    {
 
         $result = $this->vmService->getChange();
 
@@ -82,15 +84,16 @@ class ApiController extends Controller
     }
 
     /**
+     * @return JsonResponse
      * @api {get}
      * @apiDescription reset to VM demo data
-     * @return JsonResponse
      */
-    public function resetDemoData(){
+    public function resetDemoData(): JsonResponse
+    {
 
         $result = $this->vmService->resetDemoData();
 
-        if($result == true){
+        if ($result == true) {
             return response()->json([
                 'success' => true,
                 'data' => $this->vmService->index()
