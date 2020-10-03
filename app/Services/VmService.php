@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\DB;
 
 class VmService
 {
+    /**
+     * @return array
+     */
     public function index() : array
     {
 
@@ -26,6 +29,10 @@ class VmService
         return $data;
     }
 
+    /**
+     * @param array $coin
+     * @return bool
+     */
     public function moveCoinToWallet(array $coin): bool
     {
 
@@ -46,6 +53,10 @@ class VmService
         return true;
     }
 
+    /**
+     * @param array $coin
+     * @return bool
+     */
     public function moveCoinToVM(array $coin): bool
     {
 
@@ -66,6 +77,10 @@ class VmService
         return true;
     }
 
+    /**
+     * @param array $drink
+     * @return bool
+     */
     public function buy(array $drink): bool
     {
 
@@ -81,7 +96,9 @@ class VmService
         return true;
     }
 
-
+    /**
+     * @return bool
+     */
     public function getChange(): bool
     {
 
@@ -111,6 +128,10 @@ class VmService
         return true;
     }
 
+    /**
+     * @param int $amount
+     * @return int
+     */
     public function depositPut(int $amount): int
     {
         $oldDeposit = $this->getSettingByKey('deposit');
@@ -120,6 +141,10 @@ class VmService
         return $newDeposit;
     }
 
+    /**
+     * @param int $amount
+     * @return int
+     */
     public function depositCut(int $amount): int
     {
         $oldDeposit = $this->getSettingByKey('deposit');
@@ -129,16 +154,28 @@ class VmService
         return $newDeposit;
     }
 
+    /**
+     * @return int
+     */
     public function depositGet(): int
     {
         return $this->getSettingByKey('deposit');
     }
 
+
+    /**
+     * @param $amount
+     * @return int
+     */
     public function depositSet($amount) : int
     {
         $this->setSettingByKey('deposit', $amount);
     }
 
+    /**
+     * @param array $items
+     * @return int
+     */
     public function calculateTotal(array $items) : int
     {
 
@@ -151,6 +188,9 @@ class VmService
         return $total;
     }
 
+    /**
+     * @return bool
+     */
     private function updateCashTotals() : bool
     {
         $this->setSettingByKey('user_wallet_total', $this->calculateTotal(WalletCoin::all()));
@@ -160,11 +200,20 @@ class VmService
     }
 
 
+    /**
+     * @param string $key
+     * @return string
+     */
     public function getSettingByKey(string $key) : string
     {
         return VmSetting::find($key)->val;
     }
 
+    /**
+     * @param string $key
+     * @param string $val
+     * @return bool
+     */
     public function setSettingByKey(string $key, string $val)  : bool
     {
         VmSetting::updateOrCreate(
@@ -175,6 +224,9 @@ class VmService
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function resetDemoData() : bool
     {
 
